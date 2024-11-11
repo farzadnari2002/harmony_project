@@ -72,4 +72,20 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
-   
+    
+    def get_last_otp(self):
+        return self.otps.order_by('-created_at').first()
+    
+    
+class Otp(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otps', verbose_name='کاربر')
+    code = models.CharField(max_length=6, verbose_name='کد')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد کد')
+    
+    
+    class Meta():
+        verbose_name = 'رمز یکبار مصرف'
+        verbose_name_plural = 'رمزهای یکبار مصرف'
+        
+    def __str__(self):
+        return self.code

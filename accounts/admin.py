@@ -3,7 +3,11 @@ from django import forms
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
-from accounts.models import User
+from accounts.models import *
+
+
+class OtpAdmin(admin.StackedInline):
+    model = Otp   
 
 
 class UserCreationForm(forms.ModelForm):
@@ -78,9 +82,13 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ["phone"]
     ordering = ["phone"]
     filter_horizontal = []
+    inlines = (OtpAdmin,)
 
 
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
+
+
+admin
