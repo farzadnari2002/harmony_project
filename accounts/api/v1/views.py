@@ -10,11 +10,42 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
 from ...utils import generate_otp
-
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiRequest
 
 class LoginView(APIView):
     http_method_names = ['post']
     
+    @extend_schema(
+        request={
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'phone': {'type': 'string'}
+                },
+                'required': ['phone'],
+                'example': {
+                    'phone': '09123456789',
+                }
+            }
+        },
+        responses={
+            200: OpenApiResponse(
+                response={
+                    'application/json': {
+                        'type': 'object',
+                        'properties': {
+                            'is_new': {'type': 'boolean'},
+                            'otp': {'type': 'string'},
+                        },
+                        'example': {
+                            'is_new' : True,
+                            'otp' : '341752'
+                        }
+                    }
+                }
+            ),
+        }
+    )
     def post(self, request):
         phone = request.data.get('phone', '')
         try:
@@ -38,6 +69,39 @@ class LoginView(APIView):
 class OtpVerifyView(APIView):
     http_method_names = ['post']
     
+    @extend_schema(
+        request={
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'phone': {'type': 'string'},
+                    'otp': {'type': 'string'}
+                },
+                'required': ['phone', 'otp'],
+                'example': {
+                    'phone': '09123456789',
+                    'otp': '341752',
+                }
+            }
+        },
+        responses={
+            200: OpenApiResponse(
+                response={
+                    'application/json': {
+                        'type': 'object',
+                        'properties': {
+                            'is_new': {'type': 'boolean'},
+                            'otp': {'type': 'string'},
+                        },
+                        'example': {
+                            'is_new' : True,
+                            'otp' : '341752'
+                        }
+                    }
+                }
+            ),
+        }
+    )
     def post(self, request):
         phone = request.data.get('phone', '')
         received_otp = request.data.get('otp', '')
