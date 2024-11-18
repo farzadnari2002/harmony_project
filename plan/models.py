@@ -24,6 +24,9 @@ class Plan(models.Model):
     class Meta:
         verbose_name = 'برنامه'
         verbose_name_plural = 'برنامه ها'
+        
+    def __str__(self):
+        return self.name    
 
 
 class PlanAttribute(models.Model):
@@ -35,7 +38,9 @@ class PlanAttribute(models.Model):
     class Meta:
         verbose_name = 'ویژگی برنامه'
         verbose_name_plural = 'ویژگی های برنامه'
-
+        
+    def __str__(self):
+        return self.title  
     
    
     
